@@ -30,12 +30,17 @@ public class LCATest {
 		nodes[2].addChild(nodes[3]);	//		1-		-3
 		nodes[3].addChild(nodes[4]);	//	0-				-4
 		
-		assertEquals(tool.LCA(nodes[0],nodes[4]),nodes[2]);
-		assertEquals(tool.LCA(nodes[1],nodes[4]),nodes[2]);
-		assertEquals(tool.LCA(nodes[2],nodes[4]),nodes[2]);	//since nodes are descendants of themselves, this should output true
+		assertEquals("bottommost nodes", tool.LCA(nodes[0],nodes[4]),nodes[2]);
+		assertEquals("LCA's child and lowest descendant", tool.LCA(nodes[1],nodes[4]),nodes[2]);
+		assertEquals("Reflexive ancestry, 2 degrees", tool.LCA(nodes[2],nodes[4]),nodes[2]);	//since nodes are descendants of themselves, this should output true
+		assertEquals("Reflexive ancestry case, 1 degrees", tool.LCA(nodes[0], nodes[1]), nodes[1]);
+		assertEquals("Reflexive ancestry case, 0 degrees", tool.LCA(nodes[0], nodes[0]), nodes[0]);
+		assertEquals("Reflexive ancestry case, 0 degrees", tool.LCA(nodes[2], nodes[2]), nodes[2]);
 		
-		assertFalse(tool.LCA(nodes[0],nodes[4]) == nodes[5]);	//node 5 has only one child
-		assertFalse(tool.LCA(nodes[0],nodes[3]) == nodes[1]);
+		assertFalse("ensure output not trivial (ie: always true)", tool.LCA(nodes[0],nodes[4]) == nodes[5]);	//node 5 has only one child
+		assertFalse("ensure output not trivial (ie: always true)", tool.LCA(nodes[0],nodes[3]) == nodes[1]);
+		assertFalse("triviality check: Reflexive ancestry case, 0 degrees", tool.LCA(nodes[1], nodes[1]) == nodes[5]);
+		assertFalse("triviality check: Reflexive ancestry case, 0 degrees", tool.LCA(nodes[0], nodes[0]) == nodes[5]);
 		
 	}
 	
@@ -48,8 +53,8 @@ public class LCATest {
 		nodes[0].addParent(nodes[1]);	//		1
 										//	0-
 		
-		assertEquals(tool.LCA(nodes[0], nodes[1]), nodes[1]);
-		assertFalse(tool.LCA(nodes[0], nodes[1]) == nodes[0]);
+		assertEquals("",tool.LCA(nodes[0], nodes[1]), nodes[1]);
+		assertFalse("",tool.LCA(nodes[0], nodes[1]) == nodes[0]);
 	}
 	
 	@Test
@@ -61,23 +66,28 @@ public class LCATest {
 		nodes[0].addParent(nodes[2]);	//		2
 		nodes[2].addChild(nodes[1]);	//	0-		-1
 		
-		assertEquals(tool.LCA(nodes[0],nodes[1]), nodes[2]);
-		assertEquals(tool.LCA(nodes[0],nodes[2]), nodes[2]);
+		assertEquals("",tool.LCA(nodes[0],nodes[1]), nodes[2]);
+		assertEquals("",tool.LCA(nodes[0],nodes[2]), nodes[2]);
 		
-		assertFalse(tool.LCA(nodes[0],nodes[1]) == nodes[0]);
-		assertFalse(tool.LCA(nodes[0], nodes[2])== nodes[1]);
+		assertFalse("",tool.LCA(nodes[0],nodes[1]) == nodes[0]);
+		assertFalse("",tool.LCA(nodes[0], nodes[2])== nodes[1]);
 	}
 	
 	@Test
 	public void testUniTree(){
 		Node node = new Node();
 		
-		assertEquals(tool.LCA(node, node), node);	//nodes are their own descendants... therefore their own lowest common ancestor
+		assertEquals("Only one meaningful test for single node case", tool.LCA(node, node), node);	//nodes are their own descendants... therefore their own lowest common ancestor
 	}
 	
-	//TODO
 	@Test
-	public void testSeparatedNodes(){}
+	public void testSeparatedNodes(){
+		Node w = new Node();
+		Node v = new Node();
+		
+		assertEquals("Separated nodes. Shouldn't have a common ancestor", tool.LCA(v, w), null );
+		assertEquals("Reflexive case", tool.LCA(v, v), v);
+	}
 	
 	
 }
