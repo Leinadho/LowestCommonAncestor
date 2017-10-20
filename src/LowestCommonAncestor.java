@@ -10,9 +10,7 @@ import java.util.ArrayList;
 
 public class LowestCommonAncestor {
 	
-	public LowestCommonAncestor(){
-		
-	}
+	public LowestCommonAncestor(){}
 	
 	public Node LCA(Node x, Node y){
 		Node v = x;
