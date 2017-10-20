@@ -15,6 +15,8 @@ import org.junit.Test;
 
 public class LCATest {
 
+	LowestCommonAncestor tool = new LowestCommonAncestor();
+	
 	@Test
 	public void testLargeTree() {
 		
@@ -28,12 +30,12 @@ public class LCATest {
 		nodes[2].addChild(nodes[3]);	//		1-		-3
 		nodes[3].addChild(nodes[4]);	//	0-				-4
 		
-		assertEquals(LCA(nodes[0],nodes[4]),nodes[2]);
-		assertEquals(LCA(nodes[1],nodes[4]),nodes[2]);
-		assertEquals(LCA(nodes[2],nodes[4]),nodes[2]);	//since nodes are desendants of themselves, this should output true
+		assertEquals(tool.LCA(nodes[0],nodes[4]),nodes[2]);
+		assertEquals(tool.LCA(nodes[1],nodes[4]),nodes[2]);
+		assertEquals(tool.LCA(nodes[2],nodes[4]),nodes[2]);	//since nodes are descendants of themselves, this should output true
 		
-		assertFalse(LCA(nodes[0],nodes[4]) == nodes[5]);	//node 5 has only one child
-		assertFalse(LCA(nodes[0],nodes[3]) == nodes[1]);
+		assertFalse(tool.LCA(nodes[0],nodes[4]) == nodes[5]);	//node 5 has only one child
+		assertFalse(tool.LCA(nodes[0],nodes[3]) == nodes[1]);
 		
 	}
 	
@@ -46,8 +48,8 @@ public class LCATest {
 		nodes[0].addParent(nodes[1]);	//		1
 										//	0-
 		
-		assertEquals(LCA(nodes[0], nodes[1]), nodes[1]);
-		assertFalse(LCA(nodes[0], nodes[1]), nodes[0]);
+		assertEquals(tool.LCA(nodes[0], nodes[1]), nodes[1]);
+		assertFalse(tool.LCA(nodes[0], nodes[1]) == nodes[0]);
 	}
 	
 	@Test
@@ -59,19 +61,23 @@ public class LCATest {
 		nodes[0].addParent(nodes[2]);	//		2
 		nodes[2].addChild(nodes[1]);	//	0-		-1
 		
-		assertEquals(LCA(nodes[0],nodes[1]), nodes[2]);
-		assertEquals(LCA(nodes[0],nodes[2]), nodes[2]);
+		assertEquals(tool.LCA(nodes[0],nodes[1]), nodes[2]);
+		assertEquals(tool.LCA(nodes[0],nodes[2]), nodes[2]);
 		
-		assertFalse(LCA(nodes[0],nodes[1]) == nodes[0]);
-		assertFalse(LCA(nodes[0], nodes[2])== nodes[1]);
+		assertFalse(tool.LCA(nodes[0],nodes[1]) == nodes[0]);
+		assertFalse(tool.LCA(nodes[0], nodes[2])== nodes[1]);
 	}
 	
 	@Test
 	public void testUniTree(){
 		Node node = new Node();
 		
-		assertEquals(LCA(node, node), node);	//nodes are their own desendants... therefore their own lowest common ancestor
+		assertEquals(tool.LCA(node, node), node);	//nodes are their own descendants... therefore their own lowest common ancestor
 	}
+	
+	//TODO
+	@Test
+	public void testSeparatedNodes(){}
 	
 	
 }
