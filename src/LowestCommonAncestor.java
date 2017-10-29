@@ -24,7 +24,7 @@ public class LowestCommonAncestor {
 		
 		//find the intersection (if any) of x and y's ancestor lines/paths
 		while(w != null){
-			//check if root2 (node in ancestry line of y) is in  x's ancestor path
+			//check if root2 (node in ance stry line of y) is in  x's ancestor path
 			for(Node vertex : path){
 				if(w == vertex){
 					return vertex;
