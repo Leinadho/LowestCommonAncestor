@@ -6,7 +6,10 @@ import org.junit.Test;
  * 
  * @author Daniel Cosgrove
  *	This is a JUnit testing class for the Lowest common ancestor problem. 
- *	We assume that the trees under testing are binary trees. 
+ *	
+ *	The graph that we're querying must be a directed acyclic graph (DAG)
+ *	
+ *
  *	LCA API: takes 2 Node objects as parameters, and returns the node which is 
  *			 their lowest common ancestor
  *			 If this node does not exist, a null value is returned. 	

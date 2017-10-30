@@ -22,7 +22,7 @@ public class Node {
 
 	
 	public boolean addParent(Node parent){
-		if(parent.nChildren < 2){
+		if(parent != null){
 			this.parent = parent;
 			parent.nChildren++;
 			return true;
@@ -33,7 +33,7 @@ public class Node {
 	}
 	
 	public boolean addChild(Node child){
-		if(nChildren < 2){
+		if(child != null){
 			child.parent = this;
 			this.nChildren++;
 			return true;
