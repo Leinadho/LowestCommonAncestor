@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 /**
  * 
@@ -13,17 +14,19 @@
 public class Node {
 
 	int nChildren;
-	Node parent;
+	int nParents;
+	ArrayList<Node> parents = new ArrayList<Node>();
 	
 	public Node(){
 		nChildren = 0;
-		parent = null;
+		nParents = 0;
 	}
 
 	
 	public boolean addParent(Node parent){
-		if(parent != null){
-			this.parent = parent;
+		if(parent == null){
+			parents.add(parent);
+			nParents++;
 			parent.nChildren++;
 			return true;
 		}
@@ -34,11 +37,12 @@ public class Node {
 	
 	public boolean addChild(Node child){
 		if(child != null){
-			child.parent = this;
-			this.nChildren++;
+			child.parents.add(child);
+			child.nParents++;
+			nChildren++;
 			return true;
 		}
-		else{
+		else{ 
 			return false;
 		}
 	}

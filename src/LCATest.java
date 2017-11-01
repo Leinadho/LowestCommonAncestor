@@ -109,11 +109,11 @@ public class LCATest {
 	 * PART II: DAG TESTS
 	 * 
 	 * I choose to define the LCA of a Directed Acyclic Graph as the lowest
-	 * single common ancestor, meaning that there can only be one or zero result of the function.
+	 * single common ancestor, meaning that there can only be one or zero results of the function.
 	 * 
-	 * The definition of the lowest single common ancestor is:
+	 * The definition of the lowest single common ancestor (LSCA) is:
 	 * 
-	 * the LCSA of two nodes u,v is the node L which lies on all root-u and root-v paths,
+	 * the LSCA of two nodes u,v is the node L which lies on all root-u and root-v paths,
 	 * but no descendant of L has this property.
 	 * 
 	 */
