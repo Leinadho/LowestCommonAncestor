@@ -43,4 +43,7 @@ public class Node {
 		}
 	}
 	
+	//TODO: IMPLEMENT
+	//Returns true if this node is a child of p (ie: p can be reached from this)
+	public boolean isChild(Node p){};
 }
