@@ -11,7 +11,7 @@ import org.junit.Test;
  *	
  *
  *	LCA API: takes 2 Node objects as parameters, and returns the node which is 
- *			 their lowest common ancestor
+ *			 their lowest common SINGLE ancestor
  *			 If this node does not exist, a null value is returned. 	
  *
  */
@@ -107,9 +107,17 @@ public class LCATest {
 	
 	/**
 	 * PART II: DAG TESTS
+	 * 
+	 * I choose to define the LCA of a Directed Acyclic Graph as the lowest
+	 * single common ancestor, meaning that there can only be one or zero result of the function.
+	 * 
+	 * The definition of the lowest single common ancestor is:
+	 * 
+	 * the LCSA of two nodes u,v is the node L which lies on all root-u and root-v paths,
+	 * but no descendant of L has this property.
+	 * 
 	 */
 	
-	//TODO: enumerate cases you wish to test, write tests for them 
 	
 	@Test
 	public void testPyramidalDAG(){
@@ -128,32 +136,79 @@ public class LCATest {
 	}
 	
 	@Test
-	public void testMaximallyConnectedPyramidalDAG(){
+	public void testQuadrilateralDAG(){
 		//Create Data
 		Node a = new Node(),b = new Node(),c = new Node(), d = new Node();
 		a.addChild(c);					//	 		
-		a.addChild(b);					//		a		
-		b.addParent(c);					//    >   <
-		c.addChild(d);					//	 /     \
-		d.addParent(b);					//	b---->	c
-										//	 <-- 	 <
-										//	    \---- d 
+		a.addChild(b);					//		a  <---	
+		b.addParent(c);					//    /   \    |
+		c.addChild(d);					//	 /     \   | 
+		d.addParent(a);					//	b---->	c  |
+										//	  	     \ |
+										//	    	  d| 
 		//Tests
 		
+		//LCA of b and d:
+		//while 'a' is in both paths b-root & d-root, 'a' is disqualified because 'c' is 
+		//it's descendant and also satisfies this property
+		assertEquals(tool.LCA(b, d), c);	
+		assertFalse(tool.LCA(b, d) == b);		
+		assertFalse(tool.LCA(b, d) == a);	
+		
+		//LCA of d & c
+		//The expected result is c by the self-descendant property
+		assertEquals(tool.LCA(d, c), c);	
+		assertFalse(tool.LCA(d, c) == d);	
+		assertFalse(tool.LCA(d, c) == a);	
+		
+	}
+	
+	@Test
+	public void testMaximallyConnectedDAG(){
+		//Create Data
+		Node a = new Node(),b = new Node(),c = new Node(), d = new Node();
+		a.addChild(c);					//	 		
+		a.addChild(b);					//		a  <---	
+		b.addParent(c);					//    >   <    | 
+		c.addChild(d);					//	 /     \   |
+		d.addParent(b);					//	b---->	c  |
+		d.addParent(a);					//	 <-- 	 < |
+										//	    \---- d| 
+		//Tests
+		
+		//LCA of b and d:
+		//b due to self-descendant rule
+		assertEquals(tool.LCA(b, d), b);	
+		assertFalse(tool.LCA(b, d) == c);		
+		assertFalse(tool.LCA(b, d) == a);
+				
+		//LCA of d & c
+		//The expected result is c by the self-descendant property
+		assertEquals(tool.LCA(d, c), c);	
+		assertFalse(tool.LCA(d, c) == d);	
+		assertFalse(tool.LCA(d, c) == a);
+		assertFalse(tool.LCA(d, c) == b);
+		
+		assertFalse(tool.LCA(d, d) == d);	//just in case...
+		
+		//LCA of d & a
+		assertEquals(tool.LCA(d, a), a);	//bit of a limit case, with a being root 
+		assertFalse(tool.LCA(d, a) == null );
+		assertFalse(tool.LCA(d, a) == c );
 	}
 	
 	
 	@Test
-	public void testLargeDAG(){
+	public void testMediumDAG(){
 		//Create data
 		Node[] nodes = new Node[5];
 		for(int i = 0; i < nodes.length; i++){
 			nodes[i] = new Node();
 		}
-		nodes[0].addChild(nodes[1]);	//		0 
-		nodes[0].addChild(nodes[2]);	// 	1-		-2
-		nodes[1].addChild(nodes[3]);	//   \ / \  /   
-		nodes[1].addChild(nodes[4]);	//    3   4       
+		nodes[0].addChild(nodes[1]);	//		0 			A
+		nodes[0].addChild(nodes[2]);	// 	1-		-2		|
+		nodes[1].addChild(nodes[3]);	//   \ / \  /   	|	("time" axis)
+		nodes[1].addChild(nodes[4]);	//    3   4       	|
 		nodes[2].addChild(nodes[3]);	
 		nodes[2].addChild(nodes[4]);
 		
@@ -165,6 +220,30 @@ public class LCATest {
 		assertFalse(tool.LCA(nodes[3], nodes[4] ) == nodes[2]);
 		assertFalse(tool.LCA(nodes[3], nodes[4] ) == nodes[3]);
 		
+	}
+	
+	@Test
+	public void testNodeOfAmbiguousLevel(){
+		//Create data
+		Node[] nodes = new Node[7];
+		for(int i = 0; i < nodes.length; i++){
+			nodes[i] = new Node();
+		}								//			0			A 
+		nodes[0].addChild(nodes[1]);	//	   /		 \		|
+		nodes[0].addChild(nodes[2]);	//	  1 	      2		|
+		nodes[1].addChild(nodes[2]);	//	   \		  /		|
+		nodes[2].addChild(nodes[4]);	//		3<-----\ /		| ("time" axis)
+		nodes[3].addChild(nodes[4]);	//		|		4		|
+		nodes[3].addChild(nodes[5]);	//		|	/	  \ 	|
+		nodes[4].addChild(nodes[5]);	//		5		   6	|
+		nodes[4].addChild(nodes[6]);	//				
+		
+		//Tests
+		assertEquals(tool.LCA(nodes[5], nodes[6] ), nodes[4]);	//while 4's "level" (ie: distance from root) is ambiguous, it is the only node satisfying LSCA definition
+		assertFalse(tool.LCA(nodes[5], nodes[6] ) == nodes[3]); //3 is not the LSCA
+		assertEquals(tool.LCA(nodes[3], nodes[4] ), nodes[3]);	//3, by self descendant rule
+		assertEquals(tool.LCA(nodes[4], nodes[5] ), nodes[4]);	//4, by self descendant rule
+		assertEquals(tool.LCA(nodes[4], nodes[1] ), nodes[0]);	
 	}
 	
 }
